@@ -110,7 +110,7 @@ export const ChatContextProvider = ({ children, user }) => {
             }
         }
         getUsersChats()
-    }, [user])
+    }, [user, notifications])
 
     useEffect(() => {
         const getMessages = async () => {
@@ -176,5 +176,17 @@ export const ChatContextProvider = ({ children, user }) => {
         setNotifications(mNotifications)
     }, [])
 
-    return <ChatContext.Provider value={{ userChats, userChatsError, isChatLoading, potentialChats, messages, isMessagesLoading, messagesError, currentChat, onlineUsers, notifications, allUsers, sendTextMessage, updateCurrentChat, createChat, markNotificationsAsRead, markNoficationAsRead }}>{children}</ChatContext.Provider>
+    const markThisUserNotificationAsRead = (thisUserNotifications, notifications) => {
+        const mNotifications = notifications.map((ele) => {
+            let notification;
+            thisUserNotifications.forEach((n) => {
+                if (ele._id === n._id) notification = { ...n, isRead: true }
+                else return ele
+            })
+            return notification
+        })
+        setNotifications(mNotifications)
+    }
+
+    return <ChatContext.Provider value={{ userChats, userChatsError, isChatLoading, potentialChats, messages, isMessagesLoading, messagesError, currentChat, onlineUsers, notifications, allUsers, sendTextMessage, updateCurrentChat, createChat, markNotificationsAsRead, markNoficationAsRead, markThisUserNotificationAsRead }}>{children}</ChatContext.Provider>
 }
